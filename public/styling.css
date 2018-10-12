@@ -1,0 +1,58 @@
+﻿h1, h2, h3, p {
+	font-family: 'Varela Round';
+}
+
+.greenColor {
+	color: #00c40d;
+}
+
+.body {
+	background-color: #f4f4f4;
+}
+
+.center {
+	text-align: center;
+}
+
+.paintCanvas {
+	border: 4px solid #00c40d;
+    margin: auto;
+    display: none;
+    width: 600;
+	height: 600;
+	
+}
+
+.colorPreview {
+	border: 4px solid #9b9b9b;
+	width: 30px;
+	height: 30px;
+}
+
+.colorPicker {
+	margin: auto;
+	margin-top: 10px;
+	
+    width: 600px;
+    border: 4px solid #00c40d;	
+	
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#redSlider {
+	background: red;
+	width: 110px;
+}
+#greenSlider {
+	background: green;
+	width: 110px;
+}
+#blueSlider {
+	background: blue;
+	width: 110px;
+}
+#sizeSlider {
+	background: black;
+	width: 110px;
+}

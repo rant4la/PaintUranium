@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<title>PaintUranium</title>
+		<link href='https://fonts.googleapis.com/css?family=Varela Round' rel='stylesheet'>
+		<link href="styling.css" type="text/css" rel="stylesheet" />
+		
+	</head>
+
+<body class="body" onload="load()" >
+	
+	<script src="/client.js"></script>
+
+	<h1 id="h1" class="center" >Welcome to Paint<span class="greenColor">Uranium</span><span class="darkGreenColor">2.0</span>!</h1>
+	<h2 class="center" >This is an online image editor where all users edit the same image :D</h2>
+	
+	<div style="margin:auto;">
+		<canvas id="paintCanvas" class="paintCanvas" width="600" height="600">Your browser does not support this page :(</canvas>
+		<h3 id="loadingText" class="center">Loading image from server...</h3>
+	</div>
+
+	<div class="colorPicker" style="margin-left: auto; margin-right: auto;"> 
+	
+		<input type="range" min="0" max="255" value="100" id="redSlider">
+		<input type="range" min="0" max="255" value="100" id="greenSlider">
+		<input type="range" min="0" max="255" value="100" id="blueSlider">
+
+		<canvas id="colorPreview" class="colorPreview" width="30" height="30">Your browser does not support this page :(</canvas>
+		
+		<input type="range" min="1" max="100" value="20" id="sizeSlider">
+
+		<p id="sizeText" class="center"></p>
+
+	</div>
+	
+</body>
+
+</html>
