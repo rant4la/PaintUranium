@@ -14,27 +14,56 @@
 	
 	<script src="/client.js"></script>
 
-	<h1 id="h1" class="center" >Welcome to Paint<span class="greenColor">Uranium</span><span class="darkGreenColor">2.0</span>!</h1>
-	<h2 class="center" >This is an online image editor where all users edit the same image :D</h2>
-	
-	<div style="margin:auto;">
-		<canvas id="paintCanvas" class="paintCanvas" width="600" height="600">Your browser does not support this page :(</canvas>
-		<h3 id="loadingText" class="center">Loading image from server...</h3>
+	<div id="pageInfo">
+		<h1 id="h1" class="center" >Welcome to Paint<span class="greenColor">Uranium</span><span class="darkGreenColor">2.0</span>!</h1>
+		<h2 class="center" >This is an online image editor where all users edit the same image :D</h2>
 	</div>
 
-	<div class="colorPicker" style="margin-left: auto; margin-right: auto;"> 
-	
-		<input type="range" min="0" max="255" value="100" id="redSlider">
-		<input type="range" min="0" max="255" value="100" id="greenSlider">
-		<input type="range" min="0" max="255" value="100" id="blueSlider">
+	<div class="row">
 
-		<canvas id="colorPreview" class="colorPreview" width="30" height="30">Your browser does not support this page :(</canvas>
+		<div class="column" style="background-color:#aaa;">
+			<h2 style="margin:5px">Chat:</h2>
+			<textarea id="chat" readonly></textarea>
+
+			<div style="text-align: left;">
+				<br>
+				<p>Message: Username:</p>
+				<input type="text" id="message">
+				<input type="text" id="username">
+				<button type="button" id="sendMessageButton">Send Message</button> 
+			</div>
+		</div>
+
+		<div class="column" style="background-color:#bbb;">
+
+			<h2 style="margin:5px">Image:</h2>
+
+			<canvas id="paintCanvas" class="paintCanvas" width="600" height="600">Your browser does not support this page :(</canvas>
+			<h3 id="loadingText">Loading image from server...</h3>
+
+			<div class="colorPicker"> 
+	
+				<input type="range" min="0" max="255" value="100" id="redSlider">
+				<input type="range" min="0" max="255" value="100" id="greenSlider">
+				<input type="range" min="0" max="255" value="100" id="blueSlider">
 		
-		<input type="range" min="1" max="100" value="20" id="sizeSlider">
+				<canvas id="colorPreview" class="colorPreview" width="30" height="30">Your browser does not support this page :(</canvas>
+				
+				<input type="range" min="1" max="100" value="20" id="sizeSlider">
+		
+				<p id="sizeText" class="center"></p>
+		
+			</div>
+		</div>
+		<div class="column" style="background-color:#ccc;">
 
-		<p id="sizeText" class="center"></p>
+		  <h2 style="margin:5px">Scoreboard:</h2>
+		  <p>1] Player</p>
 
-	</div>
+		</div>
+	  </div>
+
+	
 	
 </body>
 

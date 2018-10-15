@@ -18,26 +18,35 @@ var paintImage = [];
 for(var i = 0; i <= 600; i++) {
     paintImage[i] = [];
 }
-for(var y = 0; y < 600; y++) {
-    for(var x = 0; x < 600; x++) {
+for(var y = 0; y <= 600; y++) {
+    for(var x = 0; x <= 600; x++) {
         paintImage[x][y] = 'ffffff';
     }
 }
+//CHAT
+var chatText = [];
+
 
 io.on('connection', function(socket) {
     console.log('User connected with socket id:', socket.id);
-  
+    
     socket.on('clientGetImage', function(data) {
         //RESPONSES TO CLIENT IMAGE REQUEST
         socket.emit('serverImage', {
             image: paintImage
         });
-        
     });
-    
+
+    socket.on('clientGetChat', function(data) {
+        //RESPONSES TO CLIENT CHAT REQUEST
+        socket.emit('serverChat', {
+            chat: chatText
+        });
+    });
+
     socket.on('clientDraw', function(data) {
         //SAVES THE DRAW TO SERVER SIDE
-        fillRectangle(data.x, data.y, data.size / 2, data.color);   
+        fillRectangle(parseInt(data.x), parseInt(data.y), parseInt(data.size), data.color);   
         
         //BROADCASTS THE NEW DRAW TO ALL SOCKETS EXCEPT SENDING
         socket.broadcast.emit('serverDraw', {
@@ -48,13 +57,22 @@ io.on('connection', function(socket) {
         });
     });
 
+    socket.on("clientChat", function(data) {
+        chatText.push('[' + data.username + '] ' + data.message);
+
+        socket.broadcast.emit('serverChat'), {
+            chat: chatText
+        }
+    });
+
 });
 
 function fillRectangle(x, y, size, color) {
-    var minX = x - size,
-        minY = y - size,
-        maxX = x + size,
-        maxY = y + size;
+    var minX = x;
+    var minY = y;
+    var maxX = x + size;
+    var maxY = y + size;
+
     if(minX < 0) {
         minX = 0;
     } else if(maxX > 600) {
@@ -63,7 +81,7 @@ function fillRectangle(x, y, size, color) {
     if(minY < 0) {
         minY = 0;
     } else if(maxY > 600) {
-        maxY = 600
+        maxY = 600;
     }
 
     for(var y = minY; y < maxY; y++) {
@@ -72,7 +90,6 @@ function fillRectangle(x, y, size, color) {
         }
     }
 }
-
 
 function intToHex(int) {
     return parseInt(int).toString(16).padStart(2, " ");
