@@ -2,68 +2,48 @@
 <html>
 
 	<head>
+		<title>PaintUranium2</title>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<title>PaintUranium</title>
-		<link href='https://fonts.googleapis.com/css?family=Varela Round' rel='stylesheet'>
 		<link href="styling.css" type="text/css" rel="stylesheet" />
 		
 	</head>
 
 <body class="body" onload="load()" >
-	
-	<script src="/client.js"></script>
 
-	<div id="pageInfo">
-		<h1 id="h1" class="center" >Welcome to Paint<span class="greenColor">Uranium</span><span class="darkGreenColor">2.0</span>!</h1>
-		<h2 class="center" >This is an online image editor where all users edit the same image :D</h2>
+	<div class="center">
+		<p class="topLeft" id="loginInfoText"></p>
+		<h1>Welcome to PaintUranium2!</h1>
+		<h2>This is an online image editor where all users edit the same image :D</h2>
 	</div>
 
-	<div class="row">
+	<div class="center" id="loginForm">
+			<input type="text" id="usernameInput" placeholder="Type your username here">
+            <br>
+            <button type="button" id="loginButton">Login</button> 
+            <p id="invalidLoginText"></p>
+	</div>
 
-		<div class="column" style="background-color:#aaa;">
-			<h2 style="margin:5px">Chat:</h2>
-			<textarea id="chat" readonly></textarea>
+	<div class="center" id="websiteForm" placeholder="Type your message here">
+		
+		<div id="chatForm">
+			<textarea id="chatTextArea" readonly></textarea>
+			<br>
+			<input type="text" id="messageTextBox" placeholder="Type your message here">
+			<button type="button" id="sendMessageButton">Send</button> 
+		</div>
 
-			<div style="text-align: left;">
-				<br>
-				<p>Message: Username:</p>
-				<input type="text" id="message">
-				<input type="text" id="username">
-				<button type="button" id="sendMessageButton">Send Message</button> 
+		<div id="paintForm">
+			<canvas id="paintCanvas" width="600" height="600">Your browser does not support this page :(</canvas>
+			<div id="colorPicker">
+				<p id="brushInfo"></p>
+				<input type="color" id="brushColorInput">
+				<input type="range" id="brushSizeInput" min="1" max="40" value="20">
 			</div>
 		</div>
 
-		<div class="column" style="background-color:#bbb;">
+	</div>
 
-			<h2 style="margin:5px">Image:</h2>
-
-			<canvas id="paintCanvas" class="paintCanvas" width="600" height="600">Your browser does not support this page :(</canvas>
-			<h3 id="loadingText">Loading image from server...</h3>
-
-			<div class="colorPicker"> 
-	
-				<input type="range" min="0" max="255" value="100" id="redSlider">
-				<input type="range" min="0" max="255" value="100" id="greenSlider">
-				<input type="range" min="0" max="255" value="100" id="blueSlider">
-		
-				<canvas id="colorPreview" class="colorPreview" width="30" height="30">Your browser does not support this page :(</canvas>
-				
-				<input type="range" min="1" max="100" value="20" id="sizeSlider">
-		
-				<p id="sizeText" class="center"></p>
-		
-			</div>
-		</div>
-		<div class="column" style="background-color:#ccc;">
-
-		  <h2 style="margin:5px">Scoreboard:</h2>
-		  <p>1] Player</p>
-
-		</div>
-	  </div>
-
-	
+	<script src="/client.js"></script>
 	
 </body>
 

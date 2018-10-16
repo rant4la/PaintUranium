@@ -20,30 +20,61 @@ for(var i = 0; i <= 600; i++) {
 }
 for(var y = 0; y <= 600; y++) {
     for(var x = 0; x <= 600; x++) {
-        paintImage[x][y] = 'ffffff';
+        paintImage[x][y] = '000000';
     }
 }
 //CHAT
 var chatText = [];
 
+//SOCKET INFO
+var usernames = {};
+
 
 io.on('connection', function(socket) {
     console.log('User connected with socket id:', socket.id);
+    usernames[socket.id] = '';
     
+    //LOGIN
+    socket.on('clientLogin', function(data) {
+        if(data.username.length < 6) {
+            socket.emit('serverLoginFailed', {
+                reason: "Username must be atleast 6 characters long"
+            });
+            return;
+        }
+        //CHECKS IF NO USER WITH SAME USERNAME AND ALSO THAT IT IS CORRECT LENGHT
+        var sameUsernameFound = false;
+
+        var clientIDs = Object.keys(io.engine.clients)
+        for(var i = 0; i < clientIDs.length; i++) { 
+            
+            if(usernames[clientIDs[i]] && usernames[clientIDs[i]] === data.username) {
+                sameUsernameFound = true;
+                break;
+            }
+        }
+        if(sameUsernameFound) {
+            socket.emit('serverLoginFailed', {
+                reason: "That username is already in use"
+            });
+        } else {
+            usernames[socket.id] = data.username;
+            socket.emit('serverLoginSuccessful', {});
+            console.log(usernames[socket.id], 'joined game');
+        }
+    });
+    socket.on('clientGetUsername', function(data) {
+        socket.emit('serverUsername', {
+            username: socket.username
+        });
+    });
+
+    //IMAGE
     socket.on('clientGetImage', function(data) {
-        //RESPONSES TO CLIENT IMAGE REQUEST
         socket.emit('serverImage', {
             image: paintImage
         });
     });
-
-    socket.on('clientGetChat', function(data) {
-        //RESPONSES TO CLIENT CHAT REQUEST
-        socket.emit('serverChat', {
-            chat: chatText
-        });
-    });
-
     socket.on('clientDraw', function(data) {
         //SAVES THE DRAW TO SERVER SIDE
         fillRectangle(parseInt(data.x), parseInt(data.y), parseInt(data.size), data.color);   
@@ -57,12 +88,19 @@ io.on('connection', function(socket) {
         });
     });
 
-    socket.on("clientChat", function(data) {
-        chatText.push('[' + data.username + '] ' + data.message);
-
-        socket.broadcast.emit('serverChat'), {
-            chat: chatText
-        }
+    //CHAT
+    socket.on('clientGetChat', function(data) {
+        //RESPONSES TO CLIENT CHAT REQUEST
+        socket.emit('serverChat', {
+            chatArray: chatText
+        });
+    });
+    socket.on("clientChatMessage", function(data) {
+        var line = '[' + usernames[socket.id] + '] ' + data.message;
+        chatText.push(line);
+        socket.broadcast.emit('serverChatMessage', {
+            message: line
+        });
     });
 
 });
