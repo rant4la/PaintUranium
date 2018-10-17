@@ -15,8 +15,22 @@
 #paintCanvas {
 	width: 600px;
 	height: 600px;
+}
 
-	
+#scoreboardForm {
+	position: fixed;
+	top: 50%;
+	right: 10%;
+	margin-top: -300px;
+	margin-right: -100px;
+
+	text-align: left;
+	padding: 4px;
+	width: 400px;
+	height: 600px;
+	border-style: solid;
+	border-color: black;
+	overflow-y: scroll;
 }
 
 #paintForm {
@@ -25,12 +39,6 @@
 	left: 50%;
 	margin-top: -300px;
 	margin-left: -300px;
-}
-
-#chatTextArea {
-	resize: none;
-	width: 400px;
-	height: 600px;
 }
 
 #chatForm {
@@ -45,14 +53,30 @@
 	margin-top: 10px;
 	width: 350px;
 }
+#chatTextDiv {
+	text-align: left;
+	padding: 4px;
+	width: 400px;
+	height: 600px;
+	border-style: solid;
+	border-color: black;
+	overflow-y: scroll;
+}
+#chatText {
+	margin: 0px;
+}
 
 #sendMessageButton {
 	width: 50px;
 }
 
+#messageStateText {
+	margin: 5px;
+}
 
-
-
+#automaticScroll {
+	margin: 5px;
+}
 
 
 
@@ -91,10 +115,23 @@ LOGIN PAGE STUFF
 #usernameInput {
 	width: 150px;
 	height: 20px;
+	margin: 2px;
+}
+
+#adminPasswordInput {
+	display: none;
+	width: 150px;
+	height: 20px;
+	margin: 2px;
 }
 
 #loginButton {
-	margin: 10px;
+	margin: 2px;
+	width: 150px;
+	height: 30px;
+}
+#adminLoginButton {
+	margin: 5px;
 	width: 150px;
 	height: 30px;
 }
