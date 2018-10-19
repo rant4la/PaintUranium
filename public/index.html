@@ -11,7 +11,8 @@
 <body class="body" onload="load()" >
 
 	<div class="center">
-		<p class="topLeft" id="loginInfoText"></p>
+		<p id="loginInfoText"></p>
+		<button type="button" id="logoutButton">Logout</button> 
 		<h1>Welcome to PaintUranium2!</h1>
 		<h2>This is an online image editor where all users edit the same image :D</h2>
 	</div>
@@ -29,7 +30,10 @@
 	<div class="center" id="websiteForm" placeholder="Type your message here">
 		
 		<div id="chatForm">
-			<div id="chatTextDiv"></div>
+			<div id="chatTextDiv">
+				<h2 class="center" style="margin:5px">Chat</h2>
+				<p id="chatText"></p>
+			</div>
 			<input type="text" id="messageTextBox" placeholder="Type your message here">
 			<button type="button" id="sendMessageButton">Send</button> 
 			<br>
@@ -44,12 +48,23 @@
 				<input type="color" id="brushColorInput">
 				<input type="range" id="brushSizeInput" min="1" max="30" value="10">
 			</div>
+				<button class="customBrushButton" id="brushButton0"></button>
+				<button class="customBrushButton" id="brushButton1"></button>
+				<button class="customBrushButton" id="brushButton2"></button>
+				<button class="customBrushButton" id="brushButton3"></button>
+				<button class="customBrushButton" id="brushButton4"></button>
 		</div>
 
 		<div id="scoreboardForm">
+			<h2 class="center" style="margin:5px">Top players</h2>
 
+			<table id="scoreboardTable" >
+				<tr>
+					<th>Username</th>
+					<th>Score</th>
+				</tr>
+			</table>
 		</div>
-
 
 	</div>
 

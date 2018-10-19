@@ -1,3 +1,6 @@
+//CHANGE THIS PASSWORD!!!!
+var correctAdminPassword = 'abc';
+
 var express = require('express');
 var socket = require('socket.io');
 
@@ -11,7 +14,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-var server = app.listen(8080, function() {
+var server = app.listen(serverPort, function() {
 	console.log("Server started on port: " + serverPort)
 });
 app.use(express.static('public'));
@@ -19,35 +22,46 @@ app.use(express.static('public'));
 //SOCKET SETUP
 var io = socket(server);
 
-//INITS IMAGE
+//IMAGE
 var paintImage = [];
 for(var i = 0; i <= 600; i++) {
     paintImage[i] = [];
 }
 initImage();
+
 //CHAT
 var chatText = [];
-
-//SOCKET INFO
 var usernames = {};
 usernames[0] = '[SERVER]'
-//ADMINS
-var correctAdminPassword = '';
+var scores = {};
+//USERNAMES THAT ARE FORBIDDEN:
+var bannedUsernames = ['server', 'admin', 'mati', 'rant', 'urani', ' '];
+var scoreboardUpdatesPerSecond = 1;
+
+
+//ADMIN
 var adminSocketIDs = [];
-//ADMIN COMMANDS
 var resetChat ='/resetChat';
 var resetImage = '/resetImage'
 
-//USERNAMES THAT ARE FORBIDDEN:
-var bannedUsernames = ['server', 'admin', 'mati', 'rant', 'urani'];
+
 
 //TIME
 var time = new Date();
 
 io.on('connection', function(socket) {
     console.log('User connected with socket id:', socket.id);
-    usernames[socket.id] = '';
-    
+    //RESETS SOCKET INFO WHEN JOINS
+    usernames[socket.id] = null;
+    scores[socket.id] = 0;
+
+    socket.on('disconnect', function() {
+        //CLEARS SOCKET FROM USERNAMES
+        chatMessageAll(0, usernames[socket.id] + ' left')
+        usernames[socket.id] = null;
+        updateScoreboard()
+    });
+
     //LOGIN
     socket.on('clientLogin', function(data) {
         //IF ADMIN PASSWORD IS DEFINED CHECKS IF IT IS CORRECT AND GIVES ADMIN PERMISSION
@@ -56,8 +70,11 @@ io.on('connection', function(socket) {
                 //LOGS IN AS ADMIN
                 adminSocketIDs.push(socket.id);
                 usernames[socket.id] = '[ADMIN] ' + data.username;
-                socket.emit('serverLoginSuccessful', {});
+                socket.emit('serverLoginSuccessful', {
+                    username: usernames[socket.id]
+                });
                 chatMessageAll(0, usernames[socket.id] + ' joined as admin, this is epic!')
+                updateScoreboard()
                 return;
             } else {
                 socket.emit('serverLoginFailed', {
@@ -68,9 +85,9 @@ io.on('connection', function(socket) {
         }
 
         //ALLOWED LENGHT
-        if(data.username.length < 6 || data.username.length > 20) {
+        if(data.username.length < 4 || data.username.length > 20) {
             socket.emit('serverLoginFailed', {
-                reason: "Username must be 6-20 characters long."
+                reason: "Username must be 4-20 characters long."
             });
             return;
         }
@@ -94,47 +111,71 @@ io.on('connection', function(socket) {
                 return;
             }
         }
-        //REGISTER
+        //LOGIN
         usernames[socket.id] = data.username;
-        socket.emit('serverLoginSuccessful', {});
-        chatMessageAll(0, usernames[socket.id] + ' joined')
-        
-    });
-    socket.on('clientGetUsername', function(data) {
-        socket.emit('serverUsername', {
-            username: socket.username
+        socket.emit('serverLoginSuccessful', {
+            username: usernames[socket.id]
         });
+        chatMessageAll(0, usernames[socket.id] + ' joined')
+        updateScoreboard();
     });
 
     //IMAGE
     socket.on('clientGetImage', function(data) {
+        //IF NOT LOGGED IN DOESN'T RESPONSE
+        if(!(usernames[socket.id])) { return;};
+
         socket.emit('serverImage', {
             image: paintImage
         });
     });
     socket.on('clientDraw', function(data) {
-        if(parseInt(data.size) > 30) {
-            //IF THE CLIENT SENDS DRAW WITH BIGGER RADIUS THAN ALLOWED IGNORES IT
-            return;
+        //IF NOT LOGGED IN DOESN'T RESPONSE
+        if(!(usernames[socket.id])) { return;};
+
+        if(data.color.toString().length < 3) {
+            //CUSTOM BRUSHES DON'T HAVE 6 LETTERS LIKE HEX COLORS
+            paintImage[parseInt(data.x)][parseInt(data.y)] = data.color;
+            io.sockets.emit('serverDraw', {
+                x: data.x,
+                y: data.y,
+                color: data.color,
+            });
+        } else {
+            //NORMAL BRUSH
+            if(parseInt(data.size) > 30) {
+                //IF THE CLIENT SENDS DRAW WITH BIGGER RADIUS THAN ALLOWED IGNORES IT
+                return;
+            }
+            //SAVES THE DRAW TO SERVER SIDE
+            fillRectangle(parseInt(data.x), parseInt(data.y), parseInt(data.size), data.color);   
+            io.sockets.emit('serverDraw', {
+                x: data.x,
+                y: data.y,
+                color: data.color,
+                size: data.size
+            });
         }
-        //SAVES THE DRAW TO SERVER SIDE
-        fillRectangle(parseInt(data.x), parseInt(data.y), parseInt(data.size), data.color);   
-        io.sockets.emit('serverDraw', {
-            x: data.x,
-            y: data.y,
-            color: data.color,
-            size: data.size
-        });
+
+        
+        //INCREASES SCORE WHEN PAINTS
+        scores[socket.id] += 10;
     });
 
     //CHAT
     socket.on('clientGetChat', function(data) {
+        //IF NOT LOGGED IN DOESN'T RESPONSE
+        if(!(usernames[socket.id])) { return;};
+
         //RESPONSES TO CLIENT CHAT REQUEST
         socket.emit('serverChat', {
             chatArray: chatText
         });
     });
     socket.on("clientChatMessage", function(data) {
+        //IF NOT LOGGED IN DOESN'T RESPONSE
+        if(!(usernames[socket.id])) { return;};
+
         if(data.message.length > 500) {
             socket.emit('serverMessageFailed', {
                 reason: 'That message is too long! Max allowed lenght is 500 characters.'
@@ -147,21 +188,40 @@ io.on('connection', function(socket) {
             executeCommand(data.message);
         }
     });
-
 });
+//SCOREBOARD
+var scoreboardTimer = new setInterval(updateScoreboard, 1000 / scoreboardUpdatesPerSecond);
+function updateScoreboard() {
+    var usernameHTML = [];
+    var scoreHTML = []
 
-function chatMessageAll(socketID, message) {
-    var senderColor;
-    if(socketID == 0 || isAdmin(socketID)) {
-        senderColor = 'red'
-    } else {
-        senderColor = '#5aad7e';
+    var sortedUsers = (Object.keys(scores).sort(function(a,b){return scores[a]-scores[b]})).reverse();
+    for(var i = 0; i < sortedUsers.length; i++) {
+        if(usernames[sortedUsers[i]]) {
+            usernameHTML.push('<span style="color:' + getUsernameColor(sortedUsers[i]) + '">' + usernames[sortedUsers[i]] + '</span>');
+            scoreHTML.push(scores[sortedUsers[i]]);
+        }
     }
-    var line = '<span style="color:' + senderColor + ';">[' + time.getHours() + ':' + time.getMinutes() + '] ' + usernames[socketID] + '</span>: ' + message;
+    io.sockets.emit('serverScoreboard', {
+        usernames: usernameHTML,
+        scores: scoreHTML
+    });
+}
+
+//CHAT
+function chatMessageAll(socketID, message) {
+    var line = '<span style="color:' + getUsernameColor(socketID) + ';">[' + time.getHours().toString().padStart(2, '0') + ':' + time.getMinutes().toString().padStart(2, '0') + '] ' + usernames[socketID] + '</span>: ' + message;
     chatText.push(line);
     io.sockets.emit('serverChatMessage', {
         message: line
     });
+}
+function getUsernameColor(socketID) {
+    if(socketID == 0 || isAdmin(socketID)) {
+        return'red';
+    } else {
+        return '#5aad7e';
+    }
 }
 //ADMIN
 function isAdmin(socketID) {
@@ -172,6 +232,7 @@ function isAdmin(socketID) {
     }
     return false;
 }
+
 function executeCommand(command) {
     if(command === resetImage) {
         initImage();

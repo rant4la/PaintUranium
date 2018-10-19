@@ -7,6 +7,10 @@
 	vertical-align: top;
 	margin: 5px;
 }
+#logoutButton {
+	float: left;
+	display: none;
+}
 
 #websiteForm {
 	display: none;
@@ -32,6 +36,14 @@
 	border-color: black;
 	overflow-y: scroll;
 }
+#scoreboardTable {
+	width: 100%;
+}
+
+table ,th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
 
 #paintForm {
 	position: fixed;
@@ -39,6 +51,30 @@
 	left: 50%;
 	margin-top: -300px;
 	margin-left: -300px;
+}
+#colorPicker {
+	margin: 5px;
+}
+.customBrushButton {
+	width: 35px;
+	height: 35px;
+	background-repeat: no-repeat;
+	background-color: gray;
+}
+#brushButton0 {
+	background-image: url("brushes/jrola.png");
+}
+#brushButton1 {
+	background-image: url("brushes/battus.png");
+}
+#brushButton2 {
+	background-image: url("brushes/koppar.png");
+}
+#brushButton3 {
+	background-image: url("brushes/mika.png");
+}
+#brushButton4 {
+	background-image: url("brushes/pitknen.png");
 }
 
 #chatForm {
@@ -77,7 +113,6 @@
 #automaticScroll {
 	margin: 5px;
 }
-
 
 
 
