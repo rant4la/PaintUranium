@@ -73,6 +73,11 @@ function load() {
     });
     paintCanvas.addEventListener('mouseup', function() {
         clearInterval(mouseTimer);
+    });
+    //IF MOUSE EXITS CANVAS RESETS MOUSE TIMER TO FIX LEAVING ON BUG
+    paintCanvas.addEventListener('mouseout', function() {
+        clearInterval(mouseTimer);
+        console.log("mouseout");
     })
     paintCanvas.addEventListener('mousemove', function(event) {
         var position = paintCanvas.getBoundingClientRect()
@@ -100,6 +105,9 @@ function load() {
 
     //WINDOW
     windowUpdateTimer = setInterval(windowUpdate, 1000 / windowUpdatesPerSecond);
+
+    //FOCUS
+    document.getElementById("usernameInput").focus();
 }
 
 function windowUpdate() {

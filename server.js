@@ -43,9 +43,6 @@ var adminSocketIDs = [];
 var resetChat ='/resetChat';
 var resetImage = '/resetImage'
 
-//TIME
-var time = new Date();
-
 io.on('connection', function(socket) {
     console.log('User connected with socket id:', socket.id);
     //RESETS SOCKET INFO WHEN JOINS
@@ -55,7 +52,6 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         //CLEARS SOCKET FROM USERNAMES
         chatMessageAll(0, usernames[socket.id] + ' left')
-        usernames[socket.id] = null;
         updateScoreboard()
     });
 
@@ -100,9 +96,9 @@ io.on('connection', function(socket) {
         }
 
         //CHECKS IF NO USER WITH SAME USERNAME AND ALSO THAT IT IS CORRECT LENGHT
-        var clientIDs = Object.keys(io.engine.clients)
-        for(var i = 0; i < clientIDs.length; i++) {   
-            if(usernames[clientIDs[i]] && usernames[clientIDs[i]] === data.username) {
+        var usernameIDs = Object.keys(usernames);
+        for(var i = 0; i < usernameIDs.length; i++) {   
+            if(usernames[usernameIDs[i]] && usernames[usernameIDs[i]] === data.username) {
                 socket.emit('serverLoginFailed', {
                     reason: "That username is already in use."
                 });
@@ -209,6 +205,7 @@ function updateScoreboard() {
 
 //CHAT
 function chatMessageAll(socketID, message) {
+    var time = new Date();
     var line = '<span style="color:' + getUsernameColor(socketID) + ';">[' + time.getHours().toString().padStart(2, '0') + ':' + time.getMinutes().toString().padStart(2, '0') + '] ' + usernames[socketID] + '</span>: ' + message;
     chatText.push(line);
     io.sockets.emit('serverChatMessage', {
@@ -216,8 +213,10 @@ function chatMessageAll(socketID, message) {
     });
 }
 function getUsernameColor(socketID) {
-    if(socketID == 0 || isAdmin(socketID)) {
+    if(socketID == 0) {
         return 'yellow';
+    } else if(isAdmin(socketID)) {
+        return 'red';
     } else {
         return '#8cb8ff';
     }
@@ -279,30 +278,6 @@ function fillRectangle(x, y, size, color) {
             paintImage[x][y] = color;
         }
     }
-}
-function drawImage(image, x, y) {
-    /*NOT DONE
-    var minX = x;
-    var minY = y;
-    var maxX = x + image.width;
-    var maxY = y + image.height;
-    if(minX < 0) {
-        minX = 0;
-    } else if(maxX > 600) {
-        maxX = 600;
-    }
-    if(minY < 0) {
-        minY = 0;
-    } else if(maxY > 600) {
-        maxY = 600;
-    }
-
-    for(var y = minY; y < maxY; y++) {
-        for(var x = minX; x < maxX; x++) {
-            paintImage[x][y] = image.;
-        }
-    }
-    */
 }
 
 function intToHex(int) {
