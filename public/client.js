@@ -45,6 +45,11 @@ function load() {
             login();
         }   
     }); 
+    document.getElementById("adminPasswordInput").addEventListener("keyup", function(event){
+        if(event.keyCode === 13) {
+            login();
+        }   
+    }); 
     document.getElementById("adminLoginButton").addEventListener("click", function(){
         if(adminLogin) {
             adminLogin = false;
@@ -57,7 +62,7 @@ function load() {
         }
     }); 
     document.getElementById("logoutButton").addEventListener("click", function(){
-        setLoggedIn(false);
+        location.reload();
     });
 
     //CANVAS AND ITS LISTENERS
@@ -76,6 +81,7 @@ function load() {
     });
 
     //CUSTOM BRUSHES
+    document.getElementById("normalBrushButton").addEventListener("click", function() {brushColor = document.getElementById("brushColorInput").value.substring(1,7);}); 
     document.getElementById("brushButton0").addEventListener("click", function() {brushColor = 0; }); 
     document.getElementById("brushButton1").addEventListener("click", function() {brushColor = 1; }); 
     document.getElementById("brushButton2").addEventListener("click", function() {brushColor = 2; }); 
@@ -100,7 +106,9 @@ function windowUpdate() {
     if(document.getElementById("brushColorInput").value.substring(1,7) !== colorInputChanged) {
         brushColor = document.getElementById("brushColorInput").value.substring(1,7);
         colorInputChanged = brushColor;
-    }
+
+        document.getElementById("normalBrushButton").style.backgroundColor = '#' + brushColor;
+    }   
 
     brushSize = document.getElementById("brushSizeInput").value;
 
@@ -110,7 +118,6 @@ function windowUpdate() {
         document.getElementById("brushInfo").innerHTML = "Color: " + brushColor + " Size: " + brushSize;
     }
     
-
     if(document.getElementById("automaticScroll").checked) {
         var chatTextDiv = document.getElementById("chatTextDiv")
         chatTextDiv.scrollTop = chatTextDiv.scrollHeight;

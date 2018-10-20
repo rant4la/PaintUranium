@@ -1,4 +1,40 @@
-﻿.center {
+﻿:root {
+	--bg: #1E1E1E;
+
+	--text: #529949;
+	--text2: white;
+
+	--highlight: #61616B;
+
+	--error: red;
+}
+
+* {
+	font-family: 'ABeeZee';
+}
+
+body {
+	background-color: var(--bg);
+}
+
+h1, h3 {
+	color: var(--text);
+}
+
+h2, p {
+	color: var(--text2);
+}
+
+input, button {
+	background-color: var(--highlight);
+	color: var(--text2);
+	border: 2px solid var(--highlight);
+}
+
+label {
+	color: var(--text2);
+}
+.center {
 	text-align: center;
 }
 
@@ -32,8 +68,7 @@
 	padding: 4px;
 	width: 400px;
 	height: 600px;
-	border-style: solid;
-	border-color: black;
+	border: 2px solid var(--highlight);
 	overflow-y: scroll;
 }
 #scoreboardTable {
@@ -41,7 +76,8 @@
 }
 
 table ,th, td {
-	border: 1px solid black;
+	border: 2px solid var(--text);
+	color: var(--text2);
 	border-collapse: collapse;
 }
 
@@ -59,7 +95,7 @@ table ,th, td {
 	width: 35px;
 	height: 35px;
 	background-repeat: no-repeat;
-	background-color: gray;
+	background-color: var(--highlight);
 }
 #brushButton0 {
 	background-image: url("brushes/jrola.png");
@@ -82,7 +118,7 @@ table ,th, td {
  	top: 50%;
   	left: 10%;
   	margin-top: -300px;
-  	margin-left: -100px;
+	margin-left: -100px;
 }
 
 #messageTextBox {
@@ -95,8 +131,9 @@ table ,th, td {
 	width: 400px;
 	height: 600px;
 	border-style: solid;
-	border-color: black;
+	border-color: var(--highlight);
 	overflow-y: scroll;
+	color: var(--text2);
 }
 #chatText {
 	margin: 0px;
@@ -113,15 +150,6 @@ table ,th, td {
 #automaticScroll {
 	margin: 5px;
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -169,4 +197,7 @@ LOGIN PAGE STUFF
 	margin: 5px;
 	width: 150px;
 	height: 30px;
+}
+#invalidLoginText {
+	color: var(--error);
 }

@@ -38,13 +38,10 @@ var scores = {};
 var bannedUsernames = ['server', 'admin', 'mati', 'rant', 'urani', ' '];
 var scoreboardUpdatesPerSecond = 1;
 
-
 //ADMIN
 var adminSocketIDs = [];
 var resetChat ='/resetChat';
 var resetImage = '/resetImage'
-
-
 
 //TIME
 var time = new Date();
@@ -71,7 +68,8 @@ io.on('connection', function(socket) {
                 adminSocketIDs.push(socket.id);
                 usernames[socket.id] = '[ADMIN] ' + data.username;
                 socket.emit('serverLoginSuccessful', {
-                    username: usernames[socket.id]
+                    username: usernames[socket.id],
+                    color: getUsernameColor(socket.id)
                 });
                 chatMessageAll(0, usernames[socket.id] + ' joined as admin, this is epic!')
                 updateScoreboard()
@@ -114,7 +112,8 @@ io.on('connection', function(socket) {
         //LOGIN
         usernames[socket.id] = data.username;
         socket.emit('serverLoginSuccessful', {
-            username: usernames[socket.id]
+            username: usernames[socket.id],
+            color: getUsernameColor(socket.id)
         });
         chatMessageAll(0, usernames[socket.id] + ' joined')
         updateScoreboard();
@@ -218,9 +217,9 @@ function chatMessageAll(socketID, message) {
 }
 function getUsernameColor(socketID) {
     if(socketID == 0 || isAdmin(socketID)) {
-        return'red';
+        return 'yellow';
     } else {
-        return '#5aad7e';
+        return '#8cb8ff';
     }
 }
 //ADMIN
@@ -255,7 +254,7 @@ function executeCommand(command) {
 function initImage() {
     for(var y = 0; y <= 600; y++) {
         for(var x = 0; x <= 600; x++) {
-            paintImage[x][y] = '000000';
+            paintImage[x][y] = '777777';
         }
     }
 }
@@ -264,7 +263,29 @@ function fillRectangle(x, y, size, color) {
     var minY = y;
     var maxX = x + size;
     var maxY = y + size;
-
+    if(minX < 0) {
+        minX = 0;
+    } else if(maxX > 600) {
+        maxX = 600;
+    }
+    if(minY < 0) {
+        minY = 0;
+    } else if(maxY > 600) {
+        maxY = 600;
+    }
+    
+    for(var y = minY; y < maxY; y++) {
+        for(var x = minX; x < maxX; x++) {
+            paintImage[x][y] = color;
+        }
+    }
+}
+function drawImage(image, x, y) {
+    /*NOT DONE
+    var minX = x;
+    var minY = y;
+    var maxX = x + image.width;
+    var maxY = y + image.height;
     if(minX < 0) {
         minX = 0;
     } else if(maxX > 600) {
@@ -278,9 +299,10 @@ function fillRectangle(x, y, size, color) {
 
     for(var y = minY; y < maxY; y++) {
         for(var x = minX; x < maxX; x++) {
-            paintImage[x][y] = color;
+            paintImage[x][y] = image.;
         }
     }
+    */
 }
 
 function intToHex(int) {

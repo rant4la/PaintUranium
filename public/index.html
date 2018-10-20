@@ -5,7 +5,7 @@
 		<title>PaintUranium2</title>
 		<script src="/socket.io/socket.io.js"></script>
 		<link href="styling.css" type="text/css" rel="stylesheet" />
-		
+		<link href='https://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet'>
 	</head>
 
 <body class="body" onload="load()" >
@@ -37,7 +37,7 @@
 			<input type="text" id="messageTextBox" placeholder="Type your message here">
 			<button type="button" id="sendMessageButton">Send</button> 
 			<br>
-			<input type="checkbox" id="automaticScroll">Scroll automaticly<br>
+			<input type="checkbox" id="automaticScroll"><label for="checkbox">Automatic scroll</label><br>
 			<p id="messageStateText"></p>
 		</div>
 
@@ -48,6 +48,7 @@
 				<input type="color" id="brushColorInput">
 				<input type="range" id="brushSizeInput" min="1" max="30" value="10">
 			</div>
+			<button class="customBrushButton" id="normalBrushButton"></button>
 				<button class="customBrushButton" id="brushButton0"></button>
 				<button class="customBrushButton" id="brushButton1"></button>
 				<button class="customBrushButton" id="brushButton2"></button>
