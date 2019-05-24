@@ -4,7 +4,7 @@ var correctAdminPassword = 'abc';
 var express = require('express');
 var socket = require('socket.io');
 
-var serverPort = 8080;
+var serverPort = 80;
 
 //APP SETUP
 var app = express();
