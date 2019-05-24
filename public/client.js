@@ -1,5 +1,5 @@
 //CHANGE THIS ADDRESS!!!!!
-var socket = io.connect('localhost')
+var socket = io.connect('/')
 
 //ELEMENTS
 var paintCanvas;
