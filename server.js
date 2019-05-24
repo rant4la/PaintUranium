@@ -15,11 +15,12 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
+app.use(express.static('public'));
 
 var server = app.listen(serverPort, function() {
 	console.log("Server started on port: " + serverPort)
 });
-app.use(express.static('public'));
+
 
 //SOCKET SETUP
 var io = socket(server);
