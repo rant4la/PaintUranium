@@ -61,8 +61,10 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {
         //CLEARS SOCKET FROM USERNAMES
-        chatMessageAll(0, usernames[socket.id] + ' left')
         updateScoreboard()
+		if(usernames[socket.id] != null) {
+			chatMessageAll(0, usernames[socket.id] + ' left')
+		}
     });
 
     //LOGIN
